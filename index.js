@@ -136,7 +136,7 @@ const handlers = {
 	const q0 = slots.questionZ.value;
     const q1 = slots.questionA.value;
     const q2 = slots.questionB.value;
-    const q3 = slots.questionC.value';
+    const q3 = slots.questionC.value;
     const dynamoParams = {
       TableName: feedbackTable,
       Item: {
