@@ -6,11 +6,6 @@ const appId = 'REPLACE WITH YOUR SKILL APPLICATION ID';
 const feedbackTable = 'fBack';
 const docClient = new awsSDK.DynamoDB.DocumentClient();
 
-// convert callback style functions to promises
-const dbScan = promisify(docClient.scan, docClient);
-const dbGet = promisify(docClient.get, docClient);
-const dbPut = promisify(docClient.put, docClient);
-const dbDelete = promisify(docClient.delete, docClient);
 
 
 const instructions = `Welcome to Feedback form  <break strength="medium" /> 
@@ -37,18 +32,18 @@ const handlers = {
     // prompt for slot values and request a confirmation for each
 
 	//questionZ
-	if (!slots.questionz.value) {
+	if (!slots.questionZ.value) {
       const slotToElicit = 'questionZ';
       const speechOutput = 'Please tell your Phone number digit by digit.';
       const repromptSpeech = 'Sorry can you repeat your answer ';
       return this.emit(':elicitSlot', slotToElicit, speechOutput, repromptSpeech);
     }
-    else if (slots.questionA.confirmationStatus !== 'CONFIRMED') {
+    else if (slots.questionZ.confirmationStatus !== 'CONFIRMED') {
 
-      if (slots.questionA.confirmationStatus !== 'DENIED') {
+      if (slots.questionZ.confirmationStatus !== 'DENIED') {
         // slot status: unconfirmed
         const slotToConfirm = 'questionZ';
-        const speechOutput = `Was your response ${slots.questionz.value}, correct?`;
+        const speechOutput = `Was your response ${slots.questionZ.value}, correct?`;
         const repromptSpeech = speechOutput;
         return this.emit(':confirmSlot', slotToConfirm, speechOutput, repromptSpeech);
       }
@@ -148,7 +143,14 @@ const handlers = {
       }
     };
 
-    
+    // convert callback style functions to promises
+	
+	
+	//const dbScan = promisify(docClient.scan, docClient);
+	const dbGet = docClient.get(dynamoParams).promise();
+	const dbPut = docClient.put(dynamoParams).promise();
+	//const dbDelete = promisify(docClient.delete, docClient);
+
 
     console.log('Attempting to add feedback', dynamoParams);
 
