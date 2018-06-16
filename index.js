@@ -34,7 +34,7 @@ const handlers = {
 	//questionZ
 	if (!slots.questionZ.value) {
       const slotToElicit = 'questionZ';
-      const speechOutput = 'Please tell your Phone number digit by digit.';
+      const speechOutput = 'Please tell your bill number.';
       const repromptSpeech = 'Sorry can you repeat your answer ';
       return this.emit(':elicitSlot', slotToElicit, speechOutput, repromptSpeech);
     }
@@ -50,7 +50,7 @@ const handlers = {
 
       // slot status: denied -> reprompt for slot data
       const slotToElicit = 'questionZ';
-      const speechOutput = 'Please tell your Phone number digit by digit.';
+      const speechOutput = 'Please tell your bill number digit by digit.';
       const repromptSpeech = 'Sorry can you repeat your answer ';
       return this.emit(':elicitSlot', slotToElicit, speechOutput, repromptSpeech);
     }
@@ -147,23 +147,25 @@ const handlers = {
 	
 	
 	//const dbScan = promisify(docClient.scan, docClient);
-	const dbGet = docClient.get(dynamoParams).promise();
-	const dbPut = docClient.put(dynamoParams).promise();
+	//const dbGet = docClient.get(dynamoParams).promise();
+	//const dbPut = docClient.put(dynamoParams).promise();
 	//const dbDelete = promisify(docClient.delete, docClient);
 
 
     console.log('Attempting to add feedback', dynamoParams);
 
-          // add the recipe
-     dbPut(dynamoParams)
-      .then(data => {
-        console.log('Add item succeeded', data);
+     // add the recipe
 
-        this.emit(':tell', 'Feedback added!');
-      })
-      .catch(err => {
-        console.error(err);
-      });
+
+
+	console.log("Adding a new item...");
+	docClient.put(dynamoParams, function(err, data) {
+    if (err) {
+        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("Added item:", JSON.stringify(data, null, 2));
+    }
+});
   },
 
 
